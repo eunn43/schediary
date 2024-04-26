@@ -1,36 +1,51 @@
 import styled from "@emotion/styled";
 
-export const PageWrapper = styled.div`
+export const Page = styled.div`
   width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const PageWrapper = styled.div`
+  width: 500px;
+  height: 720px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10% 15%;
+  padding: 4%;
+  border: 1px solid lightgray;
+  border-radius: 16px;
+  box-shadow: 5px 5px 16px lightgray;
 `;
 
 export const LabelWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 10px 0;
+  margin-top: 10px;
 `;
 
 export const Header = styled.div`
-  font-size: 40px;
+  font-size: 30px;
+  padding-bottom: 20px;
 `;
 
 export const Label = styled.div`
   font-size: 22px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  padding-left: 6px;
 `;
 
 export const Input = styled.input`
   width: 100%;
-  height: 30px;
+  height: 36px;
   border-radius: 8px;
   border: 1px solid gray;
-  font-size: 28px;
+  font-size: 16px;
+  padding: 0 8px;
 `;
 
 export const TextArea = styled.textarea`
@@ -38,7 +53,16 @@ export const TextArea = styled.textarea`
   height: 300px;
   border-radius: 8px;
   border: 1px solid gray;
-  font-size: 28px;
+  font-size: 16px;
+  padding: 8px;
+  overflow: auto;
+`;
+
+export const Error = styled.div`
+  height: 18px;
+  padding: 6px 0 0 6px;
+  font-size: 12px;
+  color: red;
 `;
 
 export const SubmitBtn = styled.button`
