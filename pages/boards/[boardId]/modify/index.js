@@ -12,10 +12,10 @@ import {
 } from "@/styles/new.js";
 import { BtnWrapper, Btn, BtnIcon } from "@/styles/detail.js";
 
-export default function NewPage() {
-  const [title, setTitle] = useState("");
+export default function ModifyPage(data) {
+  const [title, setTitle] = useState(data.title);
   const [writer, setWriter] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(data.text);
 
   const [titleErr, setTitleErr] = useState("");
   const [writerErr, setWriterErr] = useState("");
@@ -54,7 +54,7 @@ export default function NewPage() {
           </Btn>
         </BtnWrapper>
         <LabelWrapper>
-          <Header>작성하기</Header>
+          <Header>수정하기</Header>
         </LabelWrapper>
         <LabelWrapper>
           <Label>제목</Label>
