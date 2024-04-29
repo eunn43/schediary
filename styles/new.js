@@ -41,35 +41,47 @@ export const Label = styled.div`
 
 export const Input = styled.input`
   width: 100%;
-  height: 36px;
+  height: 50px;
   border-radius: 8px;
-  border: 1px solid gray;
+  border: 1px solid var(--light-blue);
   font-size: 16px;
-  padding: 0 8px;
+  padding: 8px;
+
+  &:hover {
+    background-color: var(--light-blue);
+  }
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const TextArea = styled.textarea`
   width: 100%;
   height: 300px;
+  outline: none;
   border-radius: 8px;
-  border: 1px solid gray;
+  border: 1px solid var(--light-blue);
   font-size: 16px;
-  padding: 8px;
+  padding: 14px 8px;
   overflow: auto;
+
+  &:hover {
+    background-color: var(--light-blue);
+  }
 `;
 
 export const Error = styled.div`
   height: 18px;
   padding: 6px 0 0 6px;
   font-size: 12px;
-  color: red;
+  color: var(--red);
 `;
 
 export const SubmitBtn = styled.button`
   width: 180px;
   height: 50px;
   border: none;
-  background-color: lightgray;
+  background-color: var(--light-blue);
   font-size: 22px;
   border-radius: 8px;
   margin-top: 20px;

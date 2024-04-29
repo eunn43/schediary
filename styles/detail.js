@@ -43,32 +43,33 @@ export const CardBackGround = styled.div`
   border-radius: 16px;
   background: linear-gradient(
     20deg,
-    ${(props) => props.color1} 10%,
-    ${(props) => props.color2} 50%,
-    ${(props) => props.color3}
+    ${(props) => props.color1}6C 10%,
+    ${(props) => props.color2}6C 50%,
+    ${(props) => props.color3}6C
   );
-  opacity: 50%;
-  padding: 80px 40px;
+  /* padding: 80px 40px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const CardBackHeader = styled.div`
-  font-size: 44px;
+  font-size: 54px;
+  padding-bottom: 30px;
 `;
 
 export const TitleContent = styled.div`
-  width: 100%;
   height: 36px;
-  font-size: 16px;
+  font-size: 30px;
   text-align: center;
-  padding: 0 8px;
 `;
 
 export const TextAreaContent = styled.div`
   width: 100%;
   height: 300px;
   font-size: 16px;
-  text-align: center;
-  padding: 0 8px;
+  padding: 8px;
   overflow: auto;
 `;
 
@@ -80,7 +81,7 @@ export const BtnWrapper = styled.div`
 `;
 
 export const Btn = styled.div`
-  width: 30px;
+  width: 40px;
   height: 30px;
   display: flex;
   justify-content: end;
