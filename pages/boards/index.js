@@ -9,18 +9,25 @@ import {
   CalendarWrapper,
   CalendarDot,
 } from "@/styles/board";
-import { getDiaryList } from "@/utils/storage";
+import { getDiaryList, getDataByDate } from "@/utils/storage";
 import { useRouter } from "next/router";
 
 export default function MainPage() {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
-  // const diaryList = getDiaryList();
-  const diaryList = ["2024-04-03", "2024-04-10", "2024-04-20"];
+  const [diaryList, setDiaryList] = useState([]);
+
+  useEffect(() => {
+    setDiaryList(getDiaryList());
+  });
+
+  // const diaryList = ["2024/04/03", "2024/04/10", "2024/04/20"];
   const addContent = ({ date }) => {
     const contents = [];
 
-    if (diaryList.find((day) => day === moment(date).format("YYYY-MM-DD"))) {
+    if (
+      diaryList.find((day) => day.date === moment(date).format("YYYY/MM/DD"))
+    ) {
       contents.push(
         <>
           <CalendarDot />
@@ -35,13 +42,18 @@ export default function MainPage() {
   };
 
   const onClickDay = (e) => {
-    router.push(
-      {
+    const clickedDate = moment(e).format("YYYY/MM/DD");
+    const data = getDataByDate(clickedDate);
+    if (!data) {
+      router.push({
         pathname: "/boards/new",
-        query: { date: moment(e).format("YYYY-MM-DD") },
-      },
-      "/boards/new"
-    );
+        query: { date: moment(e).format("YYYY/MM/DD") },
+      });
+    } else {
+      router.push({
+        pathname: `/boards/${data.id}`,
+      });
+    }
   };
 
   return (

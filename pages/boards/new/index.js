@@ -4,31 +4,32 @@ import {
   PageWrapper,
   LabelWrapper,
   Header,
-  Label,
   Input,
   Error,
   SubmitBtn,
   TextArea,
 } from "@/styles/new.js";
-import { BtnWrapper, Btn, BtnIcon } from "@/styles/detail.js";
+import { BtnWrapper, Btn } from "@/styles/detail.js";
+import { useRouter } from "next/router";
+import { addData, getDataByDate } from "utils/storage";
 
 export default function NewPage() {
+  const router = useRouter();
+  const date = router.query.date;
+
   const [title, setTitle] = useState("");
-  const [writer, setWriter] = useState("");
   const [content, setContent] = useState("");
 
   const [titleErr, setTitleErr] = useState("");
-  const [writerErr, setWriterErr] = useState("");
   const [contentErr, setContentErr] = useState("");
+
+  const onClickClose = () => {
+    router.push("/boards");
+  };
 
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
     if (e.target.value !== "") setTitleErr("");
-  };
-
-  const onChangeWriter = (e) => {
-    setWriter(e.target.value);
-    if (e.target.value !== "") setWriterErr("");
   };
 
   const onChangeContent = (e) => {
@@ -38,10 +39,11 @@ export default function NewPage() {
 
   const onClickSubmitBtn = () => {
     if (!title) setTitleErr("제목을 입력해주세요");
-    if (!writer) setWriterErr("이름을 입력해주세요");
     if (!content) setContentErr("내용을 입력해주세요");
-    if (title && writer && content) {
-      alert("게시글이 등록되었습니다");
+    if (title && content) {
+      addData(date, title, content, []);
+      const data = getDataByDate(date);
+      router.push({ pathname: `/boards/${data.id}` });
     }
   };
 
@@ -49,24 +51,19 @@ export default function NewPage() {
     <Page>
       <PageWrapper>
         <BtnWrapper>
-          <Btn>
-            <BtnIcon className="fa-solid fa-x" />
-          </Btn>
+          <Btn onClick={onClickClose}>닫기</Btn>
         </BtnWrapper>
         <LabelWrapper>
-          <Header>작성하기</Header>
+          <Header>일기 작성하기</Header>
         </LabelWrapper>
         <LabelWrapper>
-          <Label>제목</Label>
-          <Input type="text" onChange={onChangeTitle} />
+          <Input type="text" onChange={onChangeTitle} placeholder="제목" />
           <Error>{titleErr}</Error>
         </LabelWrapper>
         <LabelWrapper>
-          <Label>내용</Label>
-          <TextArea onChange={onChangeContent} />
+          <TextArea onChange={onChangeContent} placeholder="내용" />
           <Error>{contentErr}</Error>
         </LabelWrapper>
-
         <SubmitBtn onClick={onClickSubmitBtn}>등록하기</SubmitBtn>
       </PageWrapper>
     </Page>

@@ -4,27 +4,46 @@ import {
   TitleContent,
   TextAreaContent,
   Btn,
-  BtnIcon,
   FlipCard,
   CardFront,
   CardBack,
   CardBackGround,
   CardBackHeader,
 } from "@/styles/detail";
-import {
-  Page,
-  PageWrapper,
-  LabelWrapper,
-  Header,
-  Label,
-  SubmitBtn,
-} from "@/styles/new";
-import { useState } from "react";
+import { Page, LabelWrapper, Header } from "@/styles/new";
+import { useEffect, useState } from "react";
+import { delDataById, getDataById } from "@/utils/storage";
 
-export default function DetailPage(data) {
+export default function DetailPage() {
   const router = useRouter();
-  const id = router.query.boardId;
+  const [id, setId] = useState(0);
   const [isFilpped, setIsFlipped] = useState(false);
+  const [data, setData] = useState({
+    id: id,
+    date: "",
+    title: "",
+    content: "",
+    colors: [],
+  });
+
+  useEffect(() => {
+    setId(router.query.boardId);
+    const getData = getDataById(id);
+    if (getData) setData(getData);
+  }, [id]);
+
+  const onClickDelete = () => {
+    delDataById(id);
+    router.push("/boards");
+  };
+
+  const onClickModify = () => {
+    router.push(`/boards/${id}/modify`);
+  };
+
+  const onClickClose = () => {
+    router.push("/boards");
+  };
 
   const onClickCard = () => {
     setIsFlipped(!isFilpped);
@@ -35,23 +54,15 @@ export default function DetailPage(data) {
       <FlipCard onClick={onClickCard} className={isFilpped ? "flipped" : ""}>
         <CardFront>
           <BtnWrapper>
-            <Btn>
-              <BtnIcon className="fa-solid fa-pencil" />
-            </Btn>
-            <Btn>
-              <BtnIcon className="fa-solid fa-x" />
-            </Btn>
+            <Btn onClick={onClickDelete}>삭제</Btn>
+            <Btn onClick={onClickModify}>수정</Btn>
+            <Btn onClick={onClickClose}>닫기</Btn>
           </BtnWrapper>
           <LabelWrapper>
-            <Header>2023 / 04 / 26</Header>
+            <Header>{data.date}</Header>
           </LabelWrapper>
           <LabelWrapper>
-            <Label>제목</Label>
-            <TitleContent>{data.title}</TitleContent>
-          </LabelWrapper>
-          <LabelWrapper>
-            <Label>내용</Label>
-            <TextAreaContent>{data.text}</TextAreaContent>
+            <TextAreaContent>{data.content}</TextAreaContent>
           </LabelWrapper>
         </CardFront>
         <CardBack>
@@ -60,7 +71,10 @@ export default function DetailPage(data) {
             color2={"#87CEEB"}
             color3={"#98FB98"}
           >
-            <CardBackHeader>{"2023 / 04 / 26"}</CardBackHeader>
+            <CardBackHeader>{data.date}</CardBackHeader>
+            <LabelWrapper>
+              <TitleContent>{data.title}</TitleContent>
+            </LabelWrapper>
           </CardBackGround>
         </CardBack>
       </FlipCard>

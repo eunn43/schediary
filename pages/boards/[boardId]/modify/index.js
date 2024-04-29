@@ -1,34 +1,48 @@
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import {
   Page,
   PageWrapper,
   LabelWrapper,
   Header,
-  Label,
   Input,
   Error,
   SubmitBtn,
   TextArea,
 } from "@/styles/new.js";
-import { BtnWrapper, Btn, BtnIcon } from "@/styles/detail.js";
+import { BtnWrapper, Btn } from "@/styles/detail.js";
+import { useRouter } from "next/router";
+import { getDataById, modDataById } from "@/utils/storage";
 
-export default function ModifyPage(data) {
+export default function ModifyPage() {
+  const router = useRouter();
+  const [id, setId] = useState(0);
+  const [data, setData] = useState({
+    id: id,
+    date: "",
+    title: "",
+    content: "",
+    colors: [],
+  });
+
   const [title, setTitle] = useState(data.title);
-  const [writer, setWriter] = useState("");
   const [content, setContent] = useState(data.text);
 
   const [titleErr, setTitleErr] = useState("");
-  const [writerErr, setWriterErr] = useState("");
   const [contentErr, setContentErr] = useState("");
+
+  useEffect(() => {
+    setId(router.query.boardId);
+    const getData = getDataById(id);
+    if (getData) setData(getData);
+  }, [id]);
+
+  const onClickClose = () => {
+    router.push(`/boards/${id}`);
+  };
 
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
     if (e.target.value !== "") setTitleErr("");
-  };
-
-  const onChangeWriter = (e) => {
-    setWriter(e.target.value);
-    if (e.target.value !== "") setWriterErr("");
   };
 
   const onChangeContent = (e) => {
@@ -38,10 +52,10 @@ export default function ModifyPage(data) {
 
   const onClickSubmitBtn = () => {
     if (!title) setTitleErr("제목을 입력해주세요");
-    if (!writer) setWriterErr("이름을 입력해주세요");
     if (!content) setContentErr("내용을 입력해주세요");
-    if (title && writer && content) {
-      alert("게시글이 등록되었습니다");
+    if (title && content) {
+      modDataById(id, data.date, title, content, []);
+      router.push(`/boards/${id}`);
     }
   };
 
@@ -49,21 +63,26 @@ export default function ModifyPage(data) {
     <Page>
       <PageWrapper>
         <BtnWrapper>
-          <Btn>
-            <BtnIcon className="fa-solid fa-x" />
-          </Btn>
+          <Btn>닫기</Btn>
         </BtnWrapper>
         <LabelWrapper>
           <Header>수정하기</Header>
         </LabelWrapper>
         <LabelWrapper>
-          <Label>제목</Label>
-          <Input type="text" onChange={onChangeTitle} />
+          <Input
+            type="text"
+            onChange={onChangeTitle}
+            placeholder="제목"
+            value={title}
+          />
           <Error>{titleErr}</Error>
         </LabelWrapper>
         <LabelWrapper>
-          <Label>내용</Label>
-          <TextArea onChange={onChangeContent} />
+          <TextArea
+            onChange={onChangeContent}
+            placeholder="내용"
+            value={content}
+          />
           <Error>{contentErr}</Error>
         </LabelWrapper>
 
