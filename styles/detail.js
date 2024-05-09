@@ -51,18 +51,18 @@ export const CardBackGround = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
+  padding-left: 16px;
 `;
 
 export const CardBackHeader = styled.div`
-  font-size: 54px;
-  padding-bottom: 30px;
+  font-size: 36px;
+  padding-bottom: 10px;
 `;
 
 export const TitleContent = styled.div`
   height: 36px;
   font-size: 30px;
-  text-align: center;
 `;
 
 export const TextAreaContent = styled.div`
