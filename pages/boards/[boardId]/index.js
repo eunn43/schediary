@@ -8,11 +8,9 @@ import {
   CardFront,
   CardBack,
   CardBackGround,
-  CardBackHeader,
 } from "@/styles/detail";
 import { Page, LabelWrapper, Header } from "@/styles/new";
 import { useEffect, useState } from "react";
-import { delDataById, getDataById } from "@/utils/storage";
 import {
   Memo,
   MemoBox,
@@ -21,51 +19,65 @@ import {
   ScheduleTime,
   ScheduleTimeBox,
   ScheduleWrapper,
-} from "styles/detailSchedule";
+} from "@/styles/detailSchedule";
+import { getDiary, delDiary } from "@/utils/diaryStorage";
+import { getSchedule } from "@/utils/scheduleStorage";
+
+const start = 6;
+const end = 24;
 
 export default function DetailPage() {
   const router = useRouter();
-  const [id, setId] = useState(0);
   const [isFilpped, setIsFlipped] = useState(false);
-  const [data, setData] = useState({
-    id: id,
-    date: "",
+  const [date, setDate] = useState(router.query.boardId);
+  const [diary, setDiary] = useState({
     title: "",
     content: "",
-    colors: [],
   });
-  const [schedule, setSchedule] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "점심 : 보쌈 덮밥",
-  ]);
-  const start = 6,
-    end = 24;
-  useEffect(() => {
-    setId(router.query.boardId);
-    const getData = getDataById(id);
-    if (getData)
-      setData({
-        id: getData.id,
-        date: getData.date,
-        title: getData.title,
-        content: getData.content,
-      });
-  }, [id]);
+  const [diaryExist, setDiaryExist] = useState(false);
+  const [schedule, setSchedule] = useState({
+    timetable: Array(end - start).fill({ task: "", color: "" }),
+    memo1: "",
+    memo2: "",
+  });
 
-  const onClickDelete = () => {
-    delDataById(id);
-    router.push("/boards");
+  useEffect(() => {
+    setDate(router.query.boardId);
+    const diaryData = getDiary(date);
+    if (diaryData) {
+      setDiaryExist(true);
+      setDiary({ title: diaryData.title, content: diaryData.content });
+    }
+
+    const scheduleData = getSchedule(date);
+    if (scheduleData) {
+      setSchedule({
+        timetable: [...scheduleData.timetable],
+        memo1: scheduleData.memo1,
+        memo2: scheduleData.memo2,
+      });
+    }
+    console.log(date);
+    console.log("diary: ", diaryData);
+    console.log("schedule: ", scheduleData);
+  }, [router.query.boardId]);
+
+  const onClickDeleteDiary = () => {
+    delDiary(date);
+    setDiaryExist(false);
+    setIsFlipped(false);
   };
 
-  const onClickModify = () => {
-    router.push(`/boards/${id}/modify`);
+  const onClickNewDiary = () => {
+    router.push(`/boards/${date}/diary/new`);
+  };
+
+  const onClickModifyDiary = () => {
+    router.push(`/boards/${date}/diary/modify`);
+  };
+
+  const onClickModifySchedule = () => {
+    router.push(`/boards/${date}/schedule/modify`);
   };
 
   const onClickClose = () => {
@@ -73,64 +85,58 @@ export default function DetailPage() {
   };
 
   const onClickCard = () => {
-    setIsFlipped(!isFilpped);
+    if (diaryExist) setIsFlipped(!isFilpped);
   };
 
   return (
     <Page>
       <FlipCard onClick={onClickCard} className={isFilpped ? "flipped" : ""}>
         <CardFront>
-          <BtnWrapper>
-            <Btn onClick={onClickDelete}>삭제</Btn>
-            <Btn onClick={onClickModify}>수정</Btn>
-            <Btn onClick={onClickClose}>닫기</Btn>
-          </BtnWrapper>
-          <LabelWrapper>
-            <Header>{data.date}</Header>
-          </LabelWrapper>
-          <LabelWrapper>
-            <TitleContent>{data.title}</TitleContent>
-          </LabelWrapper>
-          <LabelWrapper>
-            <TextAreaContent>{data.content}</TextAreaContent>
-          </LabelWrapper>
-        </CardFront>
-        <CardBack>
-          <CardBackGround
-          // color1={"#FFD700"}
-          // color2={"#87CEEB"}
-          // color3={"#98FB98"}
-          >
-            {/* <CardBackHeader>{data.date}</CardBackHeader> */}
+          <CardBackGround>
             <ScheduleWrapper>
               <ScheduleTimeBox>
-                {Array.from(
-                  { length: end - start + 1 },
-                  (_, i) => i + start
-                ).map((num) => (
-                  <ScheduleTime schedule={schedule[num - start]}>
-                    {num.toString().padStart(2, "0")}
+                {schedule.timetable.map((item, idx) => (
+                  <ScheduleTime>
+                    {(idx + start).toString().padStart(2, "0")}
                   </ScheduleTime>
                 ))}
               </ScheduleTimeBox>
               <ScheduleContentBox>
-                {Array.from({ length: end - start + 1 }, (_, i) => i).map(
-                  (num) => (
-                    <ScheduleContent>{schedule[num]}</ScheduleContent>
-                  )
-                )}
+                {schedule.timetable.map((item, idx) => (
+                  <ScheduleContent>{item ? item.task : ""}</ScheduleContent>
+                ))}
               </ScheduleContentBox>
               <MemoBox>
                 <BtnWrapper>
-                  <Btn>삭제</Btn>
-                  <Btn>수정</Btn>
+                  {!diaryExist ? (
+                    <Btn onClick={onClickNewDiary}>일기쓰기</Btn>
+                  ) : (
+                    ""
+                  )}
+                  <Btn onClick={onClickModifySchedule}>일정추가</Btn>
                   <Btn onClick={onClickClose}>닫기</Btn>
                 </BtnWrapper>
-                <Memo>{"TODO\n- 운동 하기\n- 집에 가기"}</Memo>
-                <Memo></Memo>
+                <Memo>{schedule.memo1}</Memo>
+                <Memo>{schedule.memo2}</Memo>
               </MemoBox>
             </ScheduleWrapper>
           </CardBackGround>
+        </CardFront>
+        <CardBack>
+          <BtnWrapper>
+            <Btn onClick={onClickDeleteDiary}>삭제</Btn>
+            <Btn onClick={onClickModifyDiary}>수정</Btn>
+            <Btn onClick={onClickClose}>닫기</Btn>
+          </BtnWrapper>
+          <LabelWrapper>
+            <Header>{date}</Header>
+          </LabelWrapper>
+          <LabelWrapper>
+            <TitleContent>{diary.title}</TitleContent>
+          </LabelWrapper>
+          <LabelWrapper>
+            <TextAreaContent>{diary.content}</TextAreaContent>
+          </LabelWrapper>
         </CardBack>
       </FlipCard>
     </Page>

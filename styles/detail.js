@@ -28,12 +28,12 @@ const CardFace = styled.div`
 `;
 
 export const CardFront = styled(CardFace)`
-  padding: 8%;
+  padding: 2%;
   background-color: white;
 `;
 
 export const CardBack = styled(CardFace)`
-  padding: 2%;
+  padding: 8%;
   transform: rotateY(180deg);
 `;
 
