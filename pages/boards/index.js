@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Calendar from "react-calendar";
 import moment from "moment";
+
 import {
   BoardWrapper,
   PageHeader,
@@ -9,30 +11,22 @@ import {
   CalendarWrapper,
   CalendarDot,
 } from "@/styles/board";
-import { getDiaryList, getDataByDate } from "@/utils/storage";
-import { useRouter } from "next/router";
+import { getScheduleList } from "@/utils/scheduleStorage";
 
 export default function MainPage() {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
-  const [diaryList, setDiaryList] = useState([]);
+  const [scheduleList, setScheduleList] = useState([]);
 
   useEffect(() => {
-    setDiaryList(getDiaryList());
-  });
+    setScheduleList(getScheduleList());
+  }, []);
 
-  // const diaryList = ["2024/04/03", "2024/04/10", "2024/04/20"];
   const addContent = ({ date }) => {
     const contents = [];
 
-    if (
-      diaryList.find((day) => day.date === moment(date).format("YYYY/MM/DD"))
-    ) {
-      contents.push(
-        <>
-          <CalendarDot />
-        </>
-      );
+    if (scheduleList[moment(date).format("YYYY-MM-DD")]) {
+      contents.push(<CalendarDot />);
     }
     return <div>{contents}</div>;
   };
@@ -42,24 +36,14 @@ export default function MainPage() {
   };
 
   const onClickDay = (e) => {
-    const clickedDate = moment(e).format("YYYY/MM/DD");
-    const data = getDataByDate(clickedDate);
-    if (!data) {
-      router.push({
-        pathname: "/boards/new",
-        query: { date: moment(e).format("YYYY/MM/DD") },
-      });
-    } else {
-      router.push({
-        pathname: `/boards/${data.id}`,
-      });
-    }
+    const clickedDate = moment(e).format("YYYY-MM-DD");
+    router.push(`/boards/${clickedDate}`);
   };
 
   return (
     <BoardWrapper>
       <PageHeader>
-        오늘의 일기
+        일기
         <HeaderIcon className="fa-solid fa-cloud" />
       </PageHeader>
       <PageBody>

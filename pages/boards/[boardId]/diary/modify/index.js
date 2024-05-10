@@ -11,33 +11,29 @@ import {
 } from "@/styles/new.js";
 import { BtnWrapper, Btn } from "@/styles/detail.js";
 import { useRouter } from "next/router";
-import { getDataById, modDataById } from "@/utils/storage";
+import { getDiary, modDiary } from "@/utils/diaryStorage";
 
 export default function ModifyPage() {
   const router = useRouter();
-  const [id, setId] = useState(0);
-  const [data, setData] = useState({
-    id: id,
-    date: "",
-    title: "",
-    content: "",
-    colors: [],
-  });
+  const [date, setDate] = useState(router.query.boardId);
 
-  const [title, setTitle] = useState(data.title);
-  const [content, setContent] = useState(data.text);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const [titleErr, setTitleErr] = useState("");
   const [contentErr, setContentErr] = useState("");
 
   useEffect(() => {
-    setId(router.query.boardId);
-    const getData = getDataById(id);
-    if (getData) setData(getData);
-  }, [id]);
+    setDate(router.query.boardId);
+    const diaryData = getDiary(date);
+    if (diaryData) {
+      setTitle(diaryData.title);
+      setContent(diaryData.content);
+    }
+  }, [router.query.boardId]);
 
   const onClickClose = () => {
-    router.push(`/boards/${id}`);
+    router.push(`/boards/${date}`);
   };
 
   const onChangeTitle = (e) => {
@@ -54,8 +50,8 @@ export default function ModifyPage() {
     if (!title) setTitleErr("제목을 입력해주세요");
     if (!content) setContentErr("내용을 입력해주세요");
     if (title && content) {
-      modDataById(id, data.date, title, content, []);
-      router.push(`/boards/${id}`);
+      modDiary(date, title, content);
+      router.push(`/boards/${date}`);
     }
   };
 
@@ -63,7 +59,7 @@ export default function ModifyPage() {
     <Page>
       <PageWrapper>
         <BtnWrapper>
-          <Btn>닫기</Btn>
+          <Btn onClick={onClickClose}>닫기</Btn>
         </BtnWrapper>
         <LabelWrapper>
           <Header>수정하기</Header>

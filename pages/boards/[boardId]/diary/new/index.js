@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Page,
   PageWrapper,
@@ -11,11 +11,11 @@ import {
 } from "@/styles/new.js";
 import { BtnWrapper, Btn } from "@/styles/detail.js";
 import { useRouter } from "next/router";
-import { addData, getDataByDate } from "utils/storage";
+import { addDiary } from "@/utils/diaryStorage";
 
 export default function NewPage() {
   const router = useRouter();
-  const date = router.query.date;
+  const [date, setDate] = useState(router.query.boardId);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -23,8 +23,12 @@ export default function NewPage() {
   const [titleErr, setTitleErr] = useState("");
   const [contentErr, setContentErr] = useState("");
 
+  useEffect(() => {
+    setDate(router.query.boardId);
+  }, [router.query.boardId]);
+
   const onClickClose = () => {
-    router.push("/boards");
+    router.push(`/boards/${date}`);
   };
 
   const onChangeTitle = (e) => {
@@ -41,9 +45,8 @@ export default function NewPage() {
     if (!title) setTitleErr("제목을 입력해주세요");
     if (!content) setContentErr("내용을 입력해주세요");
     if (title && content) {
-      addData(date, title, content, []);
-      const data = getDataByDate(date);
-      router.push({ pathname: `/boards/${data.id}` });
+      addDiary(date, title, content);
+      router.push(`/boards/${date}`);
     }
   };
 
