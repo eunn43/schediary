@@ -42,14 +42,21 @@ export default function DetailPage() {
   });
 
   useEffect(() => {
+    if (!router.query.boardId) return;
     setDate(router.query.boardId);
+  }, [router.query.boardId]);
+
+  useEffect(() => {
+    if (!date) return;
+
     const diaryData = getDiary(date);
+    const scheduleData = getSchedule(date);
+
     if (diaryData) {
       setDiaryExist(true);
       setDiary({ title: diaryData.title, content: diaryData.content });
     }
 
-    const scheduleData = getSchedule(date);
     if (scheduleData) {
       setSchedule({
         timetable: [...scheduleData.timetable],
@@ -60,7 +67,7 @@ export default function DetailPage() {
     console.log(date);
     console.log("diary: ", diaryData);
     console.log("schedule: ", scheduleData);
-  }, [router.query.boardId]);
+  }, [date]);
 
   const onClickDeleteDiary = () => {
     delDiary(date);
@@ -88,6 +95,10 @@ export default function DetailPage() {
     if (diaryExist) setIsFlipped(!isFilpped);
   };
 
+  const formatDate = (date) => {
+    return date.replace(/-/g, "/");
+  };
+
   return (
     <Page>
       <FlipCard onClick={onClickCard} className={isFilpped ? "flipped" : ""}>
@@ -96,14 +107,14 @@ export default function DetailPage() {
             <ScheduleWrapper>
               <ScheduleTimeBox>
                 {schedule.timetable.map((item, idx) => (
-                  <ScheduleTime>
+                  <ScheduleTime schedule={item.task}>
                     {(idx + start).toString().padStart(2, "0")}
                   </ScheduleTime>
                 ))}
               </ScheduleTimeBox>
               <ScheduleContentBox>
                 {schedule.timetable.map((item, idx) => (
-                  <ScheduleContent>{item ? item.task : ""}</ScheduleContent>
+                  <ScheduleContent>{item.task}</ScheduleContent>
                 ))}
               </ScheduleContentBox>
               <MemoBox>
@@ -129,7 +140,7 @@ export default function DetailPage() {
             <Btn onClick={onClickClose}>닫기</Btn>
           </BtnWrapper>
           <LabelWrapper>
-            <Header>{date}</Header>
+            <Header>{formatDate(date)}</Header>
           </LabelWrapper>
           <LabelWrapper>
             <TitleContent>{diary.title}</TitleContent>
