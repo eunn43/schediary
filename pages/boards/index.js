@@ -12,20 +12,22 @@ import {
   CalendarDot,
 } from "@/styles/board";
 import { getScheduleList } from "@/utils/scheduleStorage";
+import { getDiaryList } from "@/utils/diaryStorage";
 
 export default function MainPage() {
   const router = useRouter();
   const [date, setDate] = useState(new Date());
-  const [scheduleList, setScheduleList] = useState([]);
+  const [diaryList, setDiaryList] = useState({});
 
   useEffect(() => {
-    setScheduleList(getScheduleList());
+    const data = getDiaryList();
+    if (data) setDiaryList(data);
   }, []);
 
   const addContent = ({ date }) => {
     const contents = [];
 
-    if (scheduleList[moment(date).format("YYYY-MM-DD")]) {
+    if (diaryList[moment(date).format("YYYY-MM-DD")]) {
       contents.push(<CalendarDot />);
     }
     return <div>{contents}</div>;
