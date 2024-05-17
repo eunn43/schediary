@@ -69,6 +69,7 @@ export default function ModifyPage() {
             type="text"
             onChange={onChangeTitle}
             placeholder="제목"
+            maxlength={22}
             value={title}
           />
           <Error>{titleErr}</Error>
