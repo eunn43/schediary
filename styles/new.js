@@ -64,6 +64,8 @@ export const TextArea = styled.textarea`
   font-size: 16px;
   padding: 14px 8px;
   overflow: auto;
+  line-height: 1.4;
+  resize: none;
 
   &:hover {
     background-color: var(--light-blue);

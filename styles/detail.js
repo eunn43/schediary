@@ -28,7 +28,7 @@ const CardFace = styled.div`
 `;
 
 export const CardFront = styled(CardFace)`
-  padding: 2%;
+  padding: 10px;
   background-color: white;
 `;
 
@@ -69,23 +69,27 @@ export const TextAreaContent = styled.div`
   width: 100%;
   height: 300px;
   font-size: 16px;
-  padding: 8px;
   overflow: auto;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  margin-top: 20px;
 `;
 
 export const BtnWrapper = styled.div`
   width: 100%;
-  height: 36px;
   display: flex;
   justify-content: end;
 `;
 
 export const Btn = styled.div`
   width: 40px;
-  height: 30px;
-  display: flex;
-  justify-content: end;
-  align-items: start;
+  text-align: center;
+  line-height: 1.2;
+
+  &:hover {
+    text-decoration: 4px solid underline var(--light-blue);
+    opacity: 80%;
+  }
 `;
 
 export const BtnIcon = styled.i`
