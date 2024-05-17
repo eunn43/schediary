@@ -96,7 +96,7 @@ export default function DetailPage() {
   };
 
   const formatDate = (date) => {
-    return date.replace(/-/g, "/");
+    return date ? date.replace(/-/g, "/") : null;
   };
 
   return (
