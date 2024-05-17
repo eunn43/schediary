@@ -11,15 +11,33 @@ export const BoardWrapper = styled.div`
 export const PageHeader = styled.div`
   width: 800px;
   height: 100px;
-  font-size: 40px;
+
   display: flex;
   align-items: end;
+  justify-content: space-around;
+`;
+
+export const HeaderTitle = styled.div`
+  width: 400px;
+  font-size: 40px;
 `;
 
 export const HeaderIcon = styled.i`
   font-size: 30px;
   color: var(--light-blue);
   margin-left: 10px;
+`;
+
+export const WeatherBox = styled.div`
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+`;
+
+export const WeatherImage = styled.img`
+  width: 70px;
+  height: 70px;
 `;
 
 export const PageBody = styled.div`
