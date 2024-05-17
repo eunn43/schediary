@@ -22,11 +22,12 @@ export const addSchedule = (date, timetable, memo1, memo2) => {
 
 export const modSchedule = (date, timetable, memo1, memo2) => {
   const scheduleList = loadScheduleList();
-  if (scheduleList[date]) {
-    scheduleList[date].timetable = [...timetable];
-    scheduleList[date].memo1 = memo1;
-    scheduleList[date].memo2 = memo2;
-  }
+  const newData = {
+    timetable: [...timetable],
+    memo1: memo1,
+    memo2: memo2,
+  };
+  scheduleList[date] = newData;
   saveScheduleList(scheduleList);
 };
 
