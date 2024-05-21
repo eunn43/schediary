@@ -60,7 +60,12 @@ export default function NewPage() {
           <Header>일기 작성하기</Header>
         </LabelWrapper>
         <LabelWrapper>
-          <Input type="text" onChange={onChangeTitle} placeholder="제목" />
+          <Input
+            type="text"
+            onChange={onChangeTitle}
+            placeholder="제목"
+            autocomplete="off"
+          />
           <Error>{titleErr}</Error>
         </LabelWrapper>
         <LabelWrapper>

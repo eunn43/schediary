@@ -169,6 +169,7 @@ export default function ModifySchedulePage() {
                 <ScheduleContentInput
                   id={`scheduleInput${idx}`}
                   type="text"
+                  autocomplete="off"
                   placeholder={item.task}
                   maxlength={14}
                   onKeyDown={(e) => onScheduleKeyDown(e, idx)}

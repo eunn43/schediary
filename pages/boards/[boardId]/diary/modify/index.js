@@ -71,6 +71,7 @@ export default function ModifyPage() {
             placeholder="제목"
             maxlength={22}
             value={title}
+            autocomplete="off"
           />
           <Error>{titleErr}</Error>
         </LabelWrapper>
